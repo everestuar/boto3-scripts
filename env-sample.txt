@@ -1,0 +1,3 @@
+#!/bin/bash
+export AWS_PROFILE=my_profile
+export SNS_ARN=arn:aws:sns:us-east-1:123456789123:topic-name
