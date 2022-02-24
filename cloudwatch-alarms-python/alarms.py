@@ -134,7 +134,7 @@ def main():
     print("main")
     # print(get_ec2_name('i-025f0d821ceb5a8f2'))
     # get_ec2_cwagent()
-    # create_alarms()
+    create_alarms()
 
 def create_alarms():
 
@@ -143,18 +143,18 @@ def create_alarms():
 
     for i_id, i_info in instances.items():
         print("\nEC2 ID:", i_id)        
-        create_ec2_ram_alarms(i_info['Nombre'], i_info['InstanceId'], i_info['InstanceType'])
-        create_ec2_cpu_alarms(i_info['Nombre'], i_info['InstanceId'])
+        # create_ec2_ram_alarms(i_info['Nombre'], i_info['InstanceId'], i_info['InstanceType'])
+        # create_ec2_cpu_alarms(i_info['Nombre'], i_info['InstanceId'])
         create_ec2_status_alarms(i_info['Nombre'], i_info['InstanceId'])
         # create_ec2_disk_alarms(i_info['nombre'], i_info['id'], i_info['type'])
         print(i_info['Nombre'] + ' ' + i_info['InstanceId'])
 
-    for i_id, i_info in rds.items():
-        print("\nRDS ID:", i_id)
-        create_rds_cpu_alarms(i_info['DBInstanceIdentifier'])
-        create_rds_connections_alarms(i_info['DBInstanceIdentifier'])
-        create_rds_storage_alarms(i_info['DBInstanceIdentifier'])
-        print(i_info['DBInstanceIdentifier'])
+    # for i_id, i_info in rds.items():
+    #     print("\nRDS ID:", i_id)
+    #     create_rds_cpu_alarms(i_info['DBInstanceIdentifier'])
+    #     create_rds_connections_alarms(i_info['DBInstanceIdentifier'])
+    #     create_rds_storage_alarms(i_info['DBInstanceIdentifier'])
+    #     print(i_info['DBInstanceIdentifier'])
 
 def create_ec2_ram_alarms(nombre, id, type):
     cloudwatch.put_metric_alarm(
