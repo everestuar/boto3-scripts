@@ -1,6 +1,7 @@
 ## Creation of CloudWatch Alarms
 ## Each method can be executed separately
 import os
+from pydoc import describe
 import boto3
 
 # Create BOTO3 clients
@@ -28,16 +29,23 @@ def get_ec2_info():
         MaxResults=100,
     )
 
+    print("response: ", response)
+
     for r in response['Reservations']:
+        # print("instances: ", r['Instances'])
         for i in r['Instances']:
             contador = contador + 1
-            for x in i['Tags']:
-                temp = {}
-                temp['InstanceId'] = i['InstanceId']
-                temp['InstanceType'] = i['InstanceType']
-                temp['Nombre'] = str(x['Value']).replace('⚡','').strip()
-                i_intances[contador] = temp
+            temp = {}
+            temp['InstanceId'] = i['InstanceId']
+            temp['InstanceType'] = i['InstanceType']   
+            for x in i['Tags']:                             
+                if x['Key'] == 'Name':
+                    # print("Nombre: ", str(x['Value']).strip())                    
+                    temp['Nombre'] = str(x['Value']).strip()
+            i_intances[contador] = temp
 
+    # print("\n")                
+    # print("instancias: ", i_intances)
     return i_intances
 
 def get_ec2_name(instance_id):
@@ -134,7 +142,8 @@ def main():
     print("main")
     # print(get_ec2_name('i-025f0d821ceb5a8f2'))
     # get_ec2_cwagent()
-    create_alarms()
+    get_ec2_info()
+    # create_alarms()
 
 def create_alarms():
 
@@ -143,9 +152,9 @@ def create_alarms():
 
     for i_id, i_info in instances.items():
         print("\nEC2 ID:", i_id)        
-        # create_ec2_ram_alarms(i_info['Nombre'], i_info['InstanceId'], i_info['InstanceType'])
+        create_ec2_ram_alarms(i_info['Nombre'], i_info['InstanceId'], i_info['InstanceType'])
         # create_ec2_cpu_alarms(i_info['Nombre'], i_info['InstanceId'])
-        create_ec2_status_alarms(i_info['Nombre'], i_info['InstanceId'])
+        # create_ec2_status_alarms(i_info['Nombre'], i_info['InstanceId'])
         # create_ec2_disk_alarms(i_info['nombre'], i_info['id'], i_info['type'])
         print(i_info['Nombre'] + ' ' + i_info['InstanceId'])
 
@@ -178,7 +187,7 @@ def create_ec2_ram_alarms(nombre, id, type):
             },
             {
                 'Name': 'ImageId',
-                'Value': 'ami-09e67e426f25ce0d7',
+                'Value': 'ami-0d80714a054d3360c',
             },
             {
                 'Name': 'InstanceType',
