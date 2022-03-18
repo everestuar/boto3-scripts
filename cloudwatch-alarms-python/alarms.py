@@ -142,8 +142,8 @@ def main():
     print("main")
     # print(get_ec2_name('i-025f0d821ceb5a8f2'))
     # get_ec2_cwagent()
-    get_ec2_info()
-    # create_alarms()
+    # get_ec2_info()
+    create_alarms()
 
 def create_alarms():
 
@@ -152,8 +152,8 @@ def create_alarms():
 
     for i_id, i_info in instances.items():
         print("\nEC2 ID:", i_id)        
-        create_ec2_ram_alarms(i_info['Nombre'], i_info['InstanceId'], i_info['InstanceType'])
-        # create_ec2_cpu_alarms(i_info['Nombre'], i_info['InstanceId'])
+        # create_ec2_ram_alarms(i_info['Nombre'], i_info['InstanceId'], i_info['InstanceType'])
+        create_ec2_cpu_alarms(i_info['Nombre'], i_info['InstanceId'])
         # create_ec2_status_alarms(i_info['Nombre'], i_info['InstanceId'])
         # create_ec2_disk_alarms(i_info['nombre'], i_info['id'], i_info['type'])
         print(i_info['Nombre'] + ' ' + i_info['InstanceId'])
@@ -200,17 +200,17 @@ def create_ec2_cpu_alarms(nombre, id):
     cloudwatch.put_metric_alarm(
         AlarmName='cpu-utilization-'+nombre,
         ComparisonOperator='GreaterThanOrEqualToThreshold',
-        EvaluationPeriods=2,
+        EvaluationPeriods=3,
         MetricName='CPUUtilization',
         Namespace='AWS/EC2',
         Period=300,
         Statistic='Average',
-        Threshold=70.0,
+        Threshold=80.0,
         TreatMissingData='missing',
         OKActions=[sns_arn],
         AlarmActions=[sns_arn],
         InsufficientDataActions=[],
-        AlarmDescription='Alarm when server ' + nombre + ' CPU exceeds 70%',
+        AlarmDescription='Alarm when server ' + nombre + ' CPU exceeds 80%',
         Dimensions=[
             {
             'Name': 'InstanceId',
